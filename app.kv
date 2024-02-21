@@ -195,8 +195,12 @@
 						on_release: 
 							app.delnote(root.pid, root.title)
 							
-						
-					
+					MDIconButton: 
+						icon: "content-copy"
+						id:icon2
+						on_release: 
+							app.copy_note(root.body)
+							
 						
 					MDIconButton:
 						icon:"pencil-outline"
@@ -353,7 +357,7 @@ MDNavigationLayout:
 				text_color_normal: .5,.5,.5,.5
 				text_color_active: .6,.6,.6,.6
 				icon_color_active: 0,0,0,1
-				selected_color_background:.8,.8,.8,.5
+				selected_color_background:.8,.8,.8,.08
 				id:bottomnav
 				
 				MDBottomNavigationItem:  
@@ -725,7 +729,7 @@ MDNavigationLayout:
 						
 	MDNavigationDrawer:
 		id:nav	
-		md_bg_color: 1,1,1,.2			
+		md_bg_color: 1,1,1,.3
 		orientation:"vertical"	
 		type:"modal"
 		anchor:"left"
