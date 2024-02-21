@@ -12,6 +12,12 @@ from kivymd.utils.set_bars_colors import set_bars_colors
 from kivymd.uix.textfield import MDTextField
 from kivy.uix.screenmanager import WipeTransition,FadeTransition, ScreenManager
 from kivymd.uix.bottomsheet import MDCustomBottomSheet
+from kivy.core.clipboard import Clipboard
+try:
+	import webbrowser 
+	
+except: 
+	pass
 
 try: 
 	from mysql import Database
@@ -62,7 +68,7 @@ def Notify(title,msg):
 
 
 def alert(txt): 
-	toast(gravity=80, y=60, text=str(txt))
+	toast(gravity=80, y=150, text=str(txt))
 	
 class MyBs(MDBoxLayout): 
 	pass
@@ -111,10 +117,11 @@ class NoteApp(MDApp):
 		self.theme_cls.material_style = "M2"
 		return Builder.load_file("app.kv")
 		
-	def on_start(self):  
+	def on_start(self):
+		print(dir(self.root))
 		#self.storage_access = False
 		self.path = "/data/data/org.test.notes/files/app/"
-		alert("Starting")
+		#alert("Starting")
 		Notify("Ready", "Ready")
 				
 		try:  
@@ -123,12 +130,7 @@ class NoteApp(MDApp):
 			request_permissions([Permission.READ_EXTERNAL_STORAGE])
 			
 		except:  
-			try:
-				alert("Permission Not Granted")
-				Notify("App Needs Storage Permission", "Please grant storage permission") 
-				
-			except: 
-				pass
+			alert("Permission request error")
 				
 		try:  
 			self.db = Database("MyNotes")
@@ -141,27 +143,23 @@ class NoteApp(MDApp):
 		#self.root.ids.sm.current = "changepwd"
 		
 		try:
-			alert("setting bottomnav transition")
+			#alert("setting bottomnav transition")
 			self.root.ids.bottomnav.transition = WipeTransition
-			alert("setting bottomnav duration")
+			#alert("setting bottomnav duration")
 			self.root.ids.bottomnav.transition_duration = 0.6
 		except: 
-			alert("setting bottom nav failed")
+			#alert("setting bottom nav failed")
+			pass
 		
 		#self.show_notes
-		#set_bars_colors(
-		#(0,0,0,0),
-		#(0,0,0,0),
-		#"Light"
-		#)
+		set_bars_colors(
+		(1,1,1,.5),
+		(0,0,0,.5),
+		"Light"
+		)
 		#create database connection
 		
-		try:
-			#self.db = Database("Notebook")
-			alert("creating db table")
-		
-			#create table in database
-		
+		try: 
 			self.db.create_table("Notes", "id INTEGER PRIMARY KEY,", "note_title CHAR,", "note_body TEXT,", "added CHAR,", "img CHAR")
 			
 		except: 
@@ -181,7 +179,8 @@ class NoteApp(MDApp):
 					pass
 				
 		except: 
-			alert("check if notes 0 change screen failed")
+			#alert("check if notes 0 change screen failed")
+			pass
 			
 			
 		#self.root.ids.sm2.current = "noteview"
@@ -192,29 +191,33 @@ class NoteApp(MDApp):
 			self.store = shelve.open("AppConfig")
 			
 		except: 
-			alert("failed to create shelve file")
+			alert("unknown error")
+			
 			
 		try:	
-			alert("changing bar1 to m3")
+			#alert("changing bar1 to m3")
 			self.root.ids.bar1.theme_cls.material_style = "M3"
 		except: 
-			alert("couldnt changed bar1 to M3")
+			#alert("couldnt changed bar1 to M3")
+			pass
 		
 		try:
-			alert("creating exit dialog")
+			#alert("creating exit dialog")
 			self.exit_dialog = MDDialog(
 	        title="Do you want to leave", buttons=[
 	        MDFlatButton(text="Yes", on_press=lambda x: self.get_running_app().stop()),
 	        MDFlatButton(text="No", on_press=lambda x: self.exit_dialog.dismiss())])       
 	       
 		except: 
-			alert("couldnt create exit dialog")
+			#alert("couldnt create exit dialog")
+			pass
 			
 		try:
-			alert("binding keyboard")
+			#alert("binding keyboard")
 			EventLoop.window.bind(on_keyboard=self.hook)
 		except: 
-			alert("couldnt bind keyboard to hook function")
+			#alert("couldnt bind keyboard to hook function")
+			pass
 		
 		self.images = ["a.jpg","b.jpg","c.jpg","d.jpg","e.jpg","f.jpg","g.jpeg"]
 		
@@ -472,8 +475,20 @@ class NoteApp(MDApp):
 		self.bs.open()
 		
 	def whats(self):
-		import webbrowser 
-		webbrowser.open("https://wa.me/+2349079515229")
+		try:
+			
+			webbrowser.open("https://wa.me/+2349079515229")
+			
+		except: 
+			alert("""Could'nt open whatsapp, please open it manually""")
+		
+	def copy_note(self, txt): 
+		try: 
+			Clipboard.copy(txt)
+			alert("Content copied to clipboard")
+			
+		except: 
+			alert("Failed to copy content")
 		
 if __name__ == "__main__": 
 	NoteApp().run()
