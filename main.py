@@ -153,8 +153,8 @@ class NoteApp(MDApp):
 		
 		#self.show_notes
 		set_bars_colors(
-		(0,0,0,.5),
-		(0,0,0,.5),
+		(0,0,0,1),
+		(0,0,0,1),
 		"Light"
 		)
 		#create database connection
